@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Zazu</title>
+    <script>
+      require('babel-register')({
+        ignore: /(node_modules|newrelic\.js)/ // ignore newrelic
+      })
+
+      const track = require('./lib/track')
+      const app = require('electron').remote.app
+      const env = require('./lib/env')
+
+      track.initialize('search', {
+        zazuVersion: app.getVersion(),
+        zazuEnvironment: env.name,
+      })
+    </script>
+    <link href="assets/stylesheets/font-awesome.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <section id="zazu"></section>
+    <script>
+      const ReactDOM = require('react-dom')
+      const React = require('react')
+
+      const ConfigWrapper = require('./containers/configWrapper')
+      const PluginWrapper = require('./containers/pluginWrapper')
+
+      ReactDOM.render(
+        React.createElement(
+          ConfigWrapper,
+          {},
+          React.createElement(PluginWrapper)
+        ),
+        document.getElementById('zazu')
+      )
+
+      // Catch `esc` or `enter` to avoid alert beep.
+      document.body.onkeydown = (e) => {
+        return e.key !== 'Enter' && e.key !== 'Escape'
+      }
+    </script>
+  </body>
+</html>
